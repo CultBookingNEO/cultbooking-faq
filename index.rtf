@@ -1,0 +1,633 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2759
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red16\green16\blue16;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c7843\c7843\c7451;\cssrgb\c100000\c100000\c100000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 <!DOCTYPE html>\
+<html lang="en">\
+<head>\
+    <meta charset="UTF-8">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <title>CultBooking Blog FAQ Assistant</title>\
+    <style>\
+        * \{\
+            margin: 0;\
+            padding: 0;\
+            box-sizing: border-box;\
+        \}\
+\
+        body \{\
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\
+            min-height: 100vh;\
+            display: flex;\
+            align-items: center;\
+            justify-content: center;\
+            padding: 20px;\
+        \}\
+\
+        .chat-container \{\
+            background: rgba(255, 255, 255, 0.95);\
+            backdrop-filter: blur(10px);\
+            border-radius: 20px;\
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);\
+            width: 100%;\
+            max-width: 800px;\
+            height: 600px;\
+            display: flex;\
+            flex-direction: column;\
+            overflow: hidden;\
+        \}\
+\
+        .chat-header \{\
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);\
+            color: white;\
+            padding: 20px;\
+            text-align: center;\
+            position: relative;\
+        \}\
+\
+        .chat-header h1 \{\
+            font-size: 1.5rem;\
+            margin-bottom: 5px;\
+        \}\
+\
+        .chat-header p \{\
+            opacity: 0.9;\
+            font-size: 0.9rem;\
+        \}\
+\
+        .chat-messages \{\
+            flex: 1;\
+            padding: 20px;\
+            overflow-y: auto;\
+            display: flex;\
+            flex-direction: column;\
+            gap: 15px;\
+        \}\
+\
+        .message \{\
+            display: flex;\
+            align-items: flex-start;\
+            gap: 10px;\
+            animation: slideIn 0.3s ease-out;\
+        \}\
+\
+        .message.user \{\
+            flex-direction: row-reverse;\
+        \}\
+\
+        .message-avatar \{\
+            width: 40px;\
+            height: 40px;\
+            border-radius: 50%;\
+            display: flex;\
+            align-items: center;\
+            justify-content: center;\
+            color: white;\
+            font-weight: bold;\
+            flex-shrink: 0;\
+        \}\
+\
+        .message.user .message-avatar \{\
+            background: linear-gradient(135deg, #667eea, #764ba2);\
+        \}\
+\
+        .message.assistant .message-avatar \{\
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);\
+        \}\
+\
+        .message-content \{\
+            background: #f8fafc;\
+            padding: 15px;\
+            border-radius: 15px;\
+            max-width: 70%;\
+            line-height: 1.5;\
+            position: relative;\
+        \}\
+\
+        .message.user .message-content \{\
+            background: linear-gradient(135deg, #667eea, #764ba2);\
+            color: white;\
+        \}\
+\
+        .message.assistant .message-content \{\
+            background: #f1f5f9;\
+            border: 1px solid #e2e8f0;\
+        \}\
+\
+        .typing-indicator \{\
+            display: flex;\
+            gap: 4px;\
+            padding: 10px;\
+        \}\
+\
+        .typing-dot \{\
+            width: 8px;\
+            height: 8px;\
+            background: #6366f1;\
+            border-radius: 50%;\
+            animation: typing 1.4s infinite ease-in-out;\
+        \}\
+\
+        .typing-dot:nth-child(2) \{ animation-delay: 0.2s; \}\
+        .typing-dot:nth-child(3) \{ animation-delay: 0.4s; \}\
+\
+        .chat-input-container \{\
+            padding: 20px;\
+            background: #f8fafc;\
+            border-top: 1px solid #e2e8f0;\
+        \}\
+\
+        .chat-input \{\
+            display: flex;\
+            gap: 10px;\
+            align-items: flex-end;\
+        \}\
+\
+        .chat-input textarea \{\
+            flex: 1;\
+            border: 2px solid #e2e8f0;\
+            border-radius: 15px;\
+            padding: 12px 16px;\
+            font-family: inherit;\
+            font-size: 14px;\
+            resize: none;\
+            min-height: 20px;\
+            max-height: 100px;\
+            transition: border-color 0.3s ease;\
+        \}\
+\
+        .chat-input textarea:focus \{\
+            outline: none;\
+            border-color: #6366f1;\
+        \}\
+\
+        .send-button \{\
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);\
+            color: white;\
+            border: none;\
+            border-radius: 15px;\
+            padding: 12px 20px;\
+            cursor: pointer;\
+            font-weight: 600;\
+            transition: transform 0.2s ease;\
+            display: flex;\
+            align-items: center;\
+            gap: 8px;\
+        \}\
+\
+        .send-button:hover \{\
+            transform: translateY(-2px);\
+        \}\
+\
+        .send-button:disabled \{\
+            opacity: 0.6;\
+            cursor: not-allowed;\
+            transform: none;\
+        \}\
+\
+        .suggested-questions \{\
+            display: flex;\
+            flex-wrap: wrap;\
+            gap: 10px;\
+            margin-top: 15px;\
+        \}\
+\
+        .suggested-question \{\
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);\
+            border: 1px solid #cbd5e1;\
+            border-radius: 20px;\
+            padding: 8px 16px;\
+            font-size: 12px;\
+            cursor: pointer;\
+            transition: all 0.3s ease;\
+        \}\
+\
+        .suggested-question:hover \{\
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);\
+            color: white;\
+            transform: translateY(-2px);\
+        \}\
+\
+        .source-link \{\
+            display: inline-block;\
+            margin-top: 10px;\
+            padding: 8px 12px;\
+            background: linear-gradient(135deg, #10b981, #059669);\
+            color: white;\
+            text-decoration: none;\
+            border-radius: 8px;\
+            font-size: 12px;\
+            transition: transform 0.2s ease;\
+        \}\
+\
+        .source-link:hover \{\
+            transform: translateY(-2px);\
+        \}\
+\
+        @keyframes slideIn \{\
+            from \{\
+                opacity: 0;\
+                transform: translateY(20px);\
+            \}\
+            to \{\
+                opacity: 1;\
+                transform: translateY(0);\
+            \}\
+        \}\
+\
+        @keyframes typing \{\
+            0%, 60%, 100% \{ transform: scale(1); opacity: 0.5; \}\
+            30% \{ transform: scale(1.2); opacity: 1; \}\
+        \}\
+\
+        @media (max-width: 768px) \{\
+            .chat-container \{\
+                height: 100vh;\
+                border-radius: 0;\
+            \}\
+\
+            .message-content \{\
+                max-width: 85%;\
+            \}\
+        \}\
+    </style>\
+</head>\
+<body>\
+    <div class="chat-container">\
+        <div class="chat-header">\
+            <h1>\uc0\u55356 \u57320  CultBooking Blog FAQ Assistant</h1>\
+            <p>Ask me anything about hotel booking engines, channel managers, and direct bookings!</p>\
+        </div>\
+        \
+        <div class="chat-messages" id="chatMessages">\
+            <div class="message assistant">\
+                <div class="message-avatar">\uc0\u55358 \u56598 </div>\
+                <div class="message-content">\
+                    <p>Hello! I'm your CultBooking blog assistant. I can help you find information about:</p>\
+                    <ul style="margin-top: 10px; padding-left: 20px;">\
+                        <li>Installation guides (hyperlink, iframe, WordPress plugin)</li>\
+                        <li>Payment gateways (Mollie, credit cards, pay at property)</li>\
+                        <li>Account setup and initial configuration</li>\
+                        <li>White label and customization options</li>\
+                        <li>Language support (including Arabic)</li>\
+                        <li>PMS integrations (Apaleo and others)</li>\
+                        <li>Extra services and promotional codes</li>\
+                        <li>Tracking, analytics, and optimization</li>\
+                        <li>Reviews and alternative solutions</li>\
+                    </ul>\
+                    <div class="suggested-questions">\
+                        <div class="suggested-question" onclick="askQuestion('How to install booking engine with hyperlink?')">Hyperlink Installation</div>\
+                        <div class="suggested-question" onclick="askQuestion('What payment options does CultBooking offer?')">Payment Options</div>\
+                        <div class="suggested-question" onclick="askQuestion('How to set up Mollie payment gateway?')">Mollie Payment</div>\
+                        <div class="suggested-question" onclick="askQuestion('What is CultBooking WordPress plugin?')">WordPress Plugin</div>\
+                        <div class="suggested-question" onclick="askQuestion('How does white label booking engine work?')">White Label Solution</div>\
+                        <div class="suggested-question" onclick="askQuestion('What are CultBooking reviews?')">Reviews & Feedback</div>\
+                        <div class="suggested-question" onclick="askQuestion('How to add extra services to bookings?')">Extra Services</div>\
+                        <div class="suggested-question" onclick="askQuestion('How to create CultBooking account?')">Account Setup</div>\
+                    </div>\
+                </div>\
+            </div>\
+        </div>\
+        \
+        <div class="chat-input-container">\
+            <div class="chat-input">\
+                <textarea \
+                    id="messageInput" \
+                    placeholder="Ask me about hotel booking technology, direct bookings, or any CultBooking topic..."\
+                    rows="1"\
+                    onkeypress="handleKeyPress(event)"\
+                ></textarea>\
+                <button class="send-button" id="sendButton" onclick="sendMessage()">\
+                    <span id="sendButtonText">Send</span>\
+                    <span id="sendIcon">\uc0\u55357 \u56960 </span>\
+                </button>\
+            </div>\
+        </div>\
+    </div>\
+\
+    <script>\
+        let isTyping = false;\
+        \
+        // Knowledge base with CultBooking blog content\
+        const knowledgeBase = \{\
+            "channel manager": \{\
+                content: "A channel manager is a software tool that helps hotels manage their inventory, rates, and availability across multiple online booking platforms (OTAs) like Booking.com, Expedia, etc. It synchronizes data in real-time to prevent overbookings and ensures consistent pricing across all channels.",\
+                source: "https://www.cultbooking.com/en/channel-manager-vs-booking-engine-whats-the-difference/"\
+            \},\
+            "booking engine": \{\
+                content: "A booking engine is a software application that allows guests to make reservations directly on your hotel's website. It's commission-free and gives you full control over the booking process, guest data, and revenue. CultBooking provides a high-conversion booking engine that integrates seamlessly with hotel websites.",\
+                source: "https://www.cultbooking.com/en/channel-manager-vs-booking-engine-whats-the-difference/"\
+            \},\
+            "wordpress hotel website": \{\
+                content: "You can create a professional hotel booking website using WordPress by leveraging its powerful tools and plugin architecture. CultBooking can connect your WordPress site with booking engines and channel managers. WordPress offers plugins for SEO, email marketing, advertisements, and vouchers to enhance your hotel website.",\
+                source: "https://www.cultbooking.com/en/how-to-create-a-hotel-booking-website-with-wordpress/"\
+            \},\
+            "direct bookings": \{\
+                content: "Direct bookings are reservations made directly through your hotel's website without third-party commissions. They're the best type of bookings as they're commission-free and give you full control over guest relationships. CultBooking helps increase direct bookings with high-conversion booking engines and technical optimizations.",\
+                source: "https://www.cultbooking.com/en/blog/"\
+            \},\
+            "google metasearch": \{\
+                content: "Google Metasearch with the 'Official Website' badge helps hotels maximize direct bookings by highlighting their direct booking links in search results. This badge boosts visibility and credibility, encouraging guests to book directly rather than through OTAs, ultimately increasing revenue and reducing commission costs.",\
+                source: "https://www.cultbooking.com/en/google-metasearch-unlocking-the-power-of-the-official-website-badge-for-your-hotel-with-cultbooking/"\
+            \},\
+            "api integration": \{\
+                content: "CultBooking offers an open API with 2-way XML connectivity, providing limitless integration possibilities. You can connect your hotel software systems/PMS and reach millions of potential guests by connecting your channel manager to all major booking channels and travel websites worldwide.",\
+                source: "https://www.cultbooking.com/en/developers-connect/"\
+            \},\
+            "book and link": \{\
+                content: "CultBooking's Book and Link solution offers multiple integration options including external links, pop-up overlays, and JavaScript implementations. All options are fully responsive, mobile-optimized, and easy to install. The pop-up option keeps users on your hotel's URL without redirection.",\
+                source: "https://www.cultbooking.com/en/pms/book-and-link/"\
+            \},\
+            "guest occupancy": \{\
+                content: "CultBooking's booking engine doesn't ask for guest occupancy before search, and this is actually beneficial for user experience. By not requiring occupancy details upfront, it reduces friction in the booking process and allows guests to explore availability first. This approach leads to higher conversion rates and better user engagement.",\
+                source: "https://www.cultbooking.com/en/%f0%9f%92%a1-why-cultbooking-does-not-ask-for-guest-occupancy-before-search-and-why-that-is-a-good-thing/"\
+            \},\
+            "cookie free": \{\
+                content: "A cookie-free booking engine doesn't store tracking cookies in users' browsers, which is important for privacy compliance (GDPR) and user trust. CultBooking provides guidance on how to check if a booking engine is truly cookie-free by examining browser developer tools and network requests.",\
+                source: "https://www.cultbooking.com/en/how-to-check-whether-a-booking-engine-is-cookie-free/"\
+            \},\
+            "title tag meta description": \{\
+                content: "Customizing title tags and meta descriptions is essential for hotel booking engines because it improves SEO visibility and click-through rates from search results. Proper title tags and meta descriptions help your hotel appear more prominently in search engines and attract more direct bookings.",\
+                source: "https://www.cultbooking.com/en/why-customizing-the-title-tag-and-meta-description-is-essential-for-hotel-booking-engines/"\
+            \},\
+            "seo optimization": \{\
+                content: "Customizing title tags and meta descriptions is essential for hotel booking engines because it improves SEO visibility and click-through rates from search results. Proper title tags and meta descriptions help your hotel appear more prominently in search engines and attract more direct bookings.",\
+                source: "https://www.cultbooking.com/en/why-customizing-the-title-tag-and-meta-description-is-essential-for-hotel-booking-engines/"\
+            \},\
+            "own domain": \{\
+                content: "Setting up your hotel booking engine on your own domain provides several advantages including better SEO, increased trust from guests, and maintaining your brand consistency. CultBooking allows you to configure your booking engine to run on your hotel's domain for a more professional appearance.",\
+                source: "https://www.cultbooking.com/en/setting-up-your-hotel-booking-engine-on-your-own-domain-with-cultbooking/"\
+            \},\
+            "website integration": \{\
+                content: "CultBooking offers multiple website integration options to seamlessly embed the booking engine into your hotel website. This includes various technical methods to ensure the booking process matches your site's design and user experience while maintaining optimal performance.",\
+                source: "https://www.cultbooking.com/en/cultbooking-website-integration/"\
+            \},\
+            "iframe integration": \{\
+                content: "IFrame integration is one method to embed CultBooking's booking engine into your website. This developer guide provides step-by-step instructions on how to properly insert and configure iframes for optimal performance, responsive design, and seamless user experience.",\
+                source: "https://www.cultbooking.com/en/how-to-insert-iframe-for-cultbooking-developer-guide/"\
+            \},\
+            "iframe": \{\
+                content: "IFrame integration is one method to embed CultBooking's booking engine into your website. This developer guide provides step-by-step instructions on how to properly insert and configure iframes for optimal performance, responsive design, and seamless user experience.",\
+                source: "https://www.cultbooking.com/en/how-to-insert-iframe-for-cultbooking-developer-guide/"\
+            \},\
+            "developer guide": \{\
+                content: "CultBooking provides comprehensive developer guides covering various integration methods including iframe implementation, website integration techniques, and technical setup instructions. These guides help developers properly implement booking engines with optimal performance and user experience.",\
+                source: "https://www.cultbooking.com/en/how-to-insert-iframe-for-cultbooking-developer-guide/"\
+            \},\
+            "hyperlink installation": \{\
+                content: "Installing CultBooking's booking engine via hyperlink is a simple method that allows you to add booking functionality to your hotel website. This user guide provides step-by-step instructions for implementing hyperlink integration, making it easy for hotels to get started with direct bookings.",\
+                source: "https://www.cultbooking.com/en/how-to-install-booking-engine-cultbooking-in-hotel-website-user-guide-hyperlink/"\
+            \},\
+            "install booking engine": \{\
+                content: "Installing CultBooking's booking engine via hyperlink is a simple method that allows you to add booking functionality to your hotel website. This user guide provides step-by-step instructions for implementing hyperlink integration, making it easy for hotels to get started with direct bookings.",\
+                source: "https://www.cultbooking.com/en/how-to-install-booking-engine-cultbooking-in-hotel-website-user-guide-hyperlink/"\
+            \},\
+            "mollie payment": \{\
+                content: "Mollie is a popular European payment gateway that CultBooking now supports. The integration allows hotels to accept various payment methods including credit cards, PayPal, and local payment options. Setting up a Mollie account involves registration, verification, and API configuration.",\
+                source: "https://www.cultbooking.com/en/how-to-open-an-account-with-mollie-payment-gateway-a-complete-guide/"\
+            \},\
+            "payment gateway": \{\
+                content: "CultBooking supports multiple payment gateways including the newly released Mollie integration. Payment gateways enable secure online transactions and offer various payment methods to guests, improving conversion rates and providing flexible payment options for hotel bookings.",\
+                source: "https://www.cultbooking.com/en/new-release-mollie-payment-gateway-on-booking-engine-from-cultbooking/"\
+            \},\
+            "tracking efficiency": \{\
+                content: "Maximizing tracking efficiency is crucial for developers, marketers, and hotel agencies. CultBooking provides comprehensive tracking solutions that help monitor booking performance, user behavior, and conversion metrics. Proper tracking setup enables data-driven decision making and optimization.",\
+                source: "https://www.cultbooking.com/en/maximizing-tracking-efficiency-a-comprehensive-guide-for-developers-marketers-and-hotel-agencies/"\
+            \},\
+            "google my business": \{\
+                content: "Setting up Google My Business is essential for hotels to improve local SEO and online visibility. This involves creating and verifying your business profile, adding accurate hotel information, photos, and managing reviews. GMB integration helps hotels appear in local search results and Google Maps.",\
+                source: "https://www.cultbooking.com/en/how-to-open-account-with-google-my-business-for-your-hotel-or-property/"\
+            \},\
+            "payment options": \{\
+                content: "CultBooking offers three main payment options: 1) Pay at property (no online payment required), 2) Credit card payments, and 3) Payment gateway integration. This flexibility allows hotels to choose the payment method that best suits their business model and guest preferences.",\
+                source: "https://www.cultbooking.com/en/payment-options-for-cultbooking-booking-engine-1pay-at-property-2-credit-card-3-payment-gateway/"\
+            \},\
+            "arabic language": \{\
+                content: "CultBooking has released Arabic language support, expanding accessibility for Arabic-speaking markets. This new language option helps hotels target Middle Eastern and North African markets, providing localized booking experiences and improving conversion rates for Arabic-speaking guests.",\
+                source: "https://www.cultbooking.com/en/arabic-new-language-released-for-cultbooking/"\
+            \},\
+            "apaleo pms": \{\
+                content: "CultBooking has partnered with Apaleo PMS to empower digital properties with seamless integration. This partnership combines CultBooking's booking engine capabilities with Apaleo's cloud-based property management system, providing a comprehensive solution for modern hotels.",\
+                source: "https://www.cultbooking.com/en/cultbooking-partners-with-apaleo-pms-to-empower-digital-properties/"\
+            \},\
+            "account setup": \{\
+                content: "Creating a CultBooking account involves registration, initial setup, and configuration of your hotel booking engine. The process includes adding property details, setting up rooms and rates, configuring payment options, and customizing the booking interface to match your brand.",\
+                source: "https://www.cultbooking.com/en/how-to-open-create-an-account-with-cultbooking-and-do-the-initial-setup/"\
+            \},\
+            "wordpress plugin": \{\
+                content: "CultBooking offers a dedicated WordPress plugin that makes it easy to integrate the hotel booking engine with WordPress websites. The plugin provides seamless integration, customization options, and maintains WordPress compatibility while delivering powerful booking functionality.",\
+                source: "https://www.cultbooking.com/en/wordpress-plugin-cultbooking-hotel-booking-engine/"\
+            \},\
+            "hotel logo optimization": \{\
+                content: "Hotel logo optimization is important for brand recognition and professional appearance in booking engines. CultBooking provides guidelines for optimal logo formats, sizes, and placement to ensure your hotel brand is prominently displayed throughout the booking process.",\
+                source: "https://www.cultbooking.com/en/hotel-logo-optimization/"\
+            \},\
+            "white label": \{\
+                content: "CultBooking's white label hotel booking engine allows complete customization and branding to match your hotel's identity. This solution removes CultBooking branding and enables hotels to maintain consistent brand experience throughout the entire booking process.",\
+                source: "https://www.cultbooking.com/en/white-label-hotel-booking-engine/"\
+            \},\
+            "promotional code": \{\
+                content: "CultBooking supports automatic promotional codes that can be applied to bookings based on specific conditions. This feature helps hotels implement discount strategies, seasonal promotions, and targeted offers to increase bookings and revenue.",\
+                source: "https://www.cultbooking.com/en/automatic-promotional-code-on-cultbooking/"\
+            \},\
+            "bookingsuite alternative": \{\
+                content: "CultBooking serves as a worthy alternative to BookingSuite, Booking.com BookingButton, and other booking solutions. It offers competitive features, better customization options, commission-free direct bookings, and comprehensive integration capabilities.",\
+                source: "https://www.cultbooking.com/en/cultbooking-a-worthy-alternative-for-bookingsuite-booking-com-bookingbutton/"\
+            \},\
+            "booking button": \{\
+                content: "CultBooking's booking button provides a simple way to add booking functionality to your website. Unlike traditional booking buttons, CultBooking offers more customization, better integration options, and maintains your brand identity throughout the booking process.",\
+                source: "https://www.cultbooking.com/en/wheres-the-booking-button-cultbooking/"\
+            \},\
+            "extra services": \{\
+                content: "CultBooking supports extra services and add-ons that hotels can offer during the booking process. This includes spa services, transfers, meals, and other ancillary services that help increase revenue per booking and enhance guest experience.",\
+                source: "https://www.cultbooking.com/en/extra-services-for-cultbooking/"\
+            \},\
+            "cultbooking reviews": \{\
+                content: "CultBooking has received positive reviews from hotels and industry professionals for its ease of use, customization options, reliable performance, and excellent customer support. The platform consistently delivers high conversion rates and seamless booking experiences.",\
+                source: "https://www.cultbooking.com/en/cultbooking-reviews/"\
+            \},\
+            "smart calendar": \{\
+                content: "CultBooking's new smart calendar overhaul is designed to boost bookings and reduce friction in the booking process. The improved calendar interface provides better user experience, faster loading times, and more intuitive date selection for guests.",\
+                source: "https://www.cultbooking.com/en/new-smart-calendar-overhaul-to-boost-bookings-cut-friction/"\
+            \},\
+            "room description": \{\
+                content: "CultBooking has improved room long text description design and functionality to provide better information presentation. This enhancement allows hotels to showcase room features, amenities, and details more effectively, helping guests make informed booking decisions.",\
+                source: "https://www.cultbooking.com/en/room-long-text-description-design-functionality-improvement-cultbooking/"\
+            \}\
+        \};\
+\
+        function addMessage(content, isUser = false, hasSource = false, sourceUrl = '') \{\
+            const messagesContainer = document.getElementById('chatMessages');\
+            const messageDiv = document.createElement('div');\
+            messageDiv.className = `message $\{isUser ? 'user' : 'assistant'\}`;\
+            \
+            const avatar = document.createElement('div');\
+            avatar.className = 'message-avatar';\
+            avatar.textContent = isUser ? '\uc0\u55357 \u56420 ' : '\u55358 \u56598 ';\
+            \
+            const messageContent = document.createElement('div');\
+            messageContent.className = 'message-content';\
+            messageContent.innerHTML = content;\
+            \
+            if (hasSource && sourceUrl) \{\
+                const sourceLink = document.createElement('a');\
+                sourceLink.href = sourceUrl;\
+                sourceLink.target = '_blank';\
+                sourceLink.className = 'source-link';\
+                sourceLink.textContent = '\uc0\u55357 \u56534  Read full article';\
+                messageContent.appendChild(sourceLink);\
+            \}\
+            \
+            messageDiv.appendChild(avatar);\
+            messageDiv.appendChild(messageContent);\
+            messagesContainer.appendChild(messageDiv);\
+            \
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;\
+        \}\
+\
+        function showTypingIndicator() \{\
+            const messagesContainer = document.getElementById('chatMessages');\
+            const typingDiv = document.createElement('div');\
+            typingDiv.className = 'message assistant';\
+            typingDiv.id = 'typingIndicator';\
+            \
+            const avatar = document.createElement('div');\
+            avatar.className = 'message-avatar';\
+            avatar.textContent = '\uc0\u55358 \u56598 ';\
+            \
+            const typingContent = document.createElement('div');\
+            typingContent.className = 'message-content';\
+            typingContent.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';\
+            \
+            typingDiv.appendChild(avatar);\
+            typingDiv.appendChild(typingContent);\
+            messagesContainer.appendChild(typingDiv);\
+            \
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;\
+        \}\
+\
+        function removeTypingIndicator() \{\
+            const typingIndicator = document.getElementById('typingIndicator');\
+            if (typingIndicator) \{\
+                typingIndicator.remove();\
+            \}\
+        \}\
+\
+        function findBestMatch(userMessage) \{\
+            const message = userMessage.toLowerCase();\
+            let bestMatch = null;\
+            let bestScore = 0;\
+\
+            for (const [key, data] of Object.entries(knowledgeBase)) \{\
+                const keywords = key.split(' ');\
+                let score = 0;\
+                \
+                keywords.forEach(keyword => \{\
+                    if (message.includes(keyword)) \{\
+                        score += keyword.length;\
+                    \}\
+                \});\
+                \
+                // Boost score for exact matches\
+                if (message.includes(key)) \{\
+                    score += key.length * 2;\
+                \}\
+                \
+                if (score > bestScore) \{\
+                    bestScore = score;\
+                    bestMatch = data;\
+                \}\
+            \}\
+\
+            return bestMatch;\
+        \}\
+\
+        function generateResponse(userMessage) \{\
+            const match = findBestMatch(userMessage);\
+            \
+            if (match) \{\
+                return \{\
+                    content: match.content,\
+                    hasSource: true,\
+                    sourceUrl: match.source\
+                \};\
+            \} else \{\
+                return \{\
+                    content: `I couldn't find specific information about "$\{userMessage\}" in the CultBooking blog. However, I can help you with topics like:<br><br>\
+                    \'95 Installation guides (hyperlink, iframe, WordPress plugin)<br>\
+                    \'95 Payment options (Mollie, credit cards, pay at property)<br>\
+                    \'95 Account setup and configuration<br>\
+                    \'95 White label and branding customization<br>\
+                    \'95 Language support and localization<br>\
+                    \'95 PMS integrations and partnerships<br>\
+                    \'95 Extra services and promotional features<br>\
+                    \'95 Analytics, tracking, and optimization<br>\
+                    \'95 Reviews, alternatives, and comparisons<br><br>\
+                    Try asking about one of these topics, or visit the <a href="https://www.cultbooking.com/en/blog/" target="_blank">CultBooking blog</a> directly to browse all articles.`,\
+                    hasSource: false,\
+                    sourceUrl: ''\
+                \};\
+            \}\
+        \}\
+\
+        async function sendMessage() \{\
+            const input = document.getElementById('messageInput');\
+            const sendButton = document.getElementById('sendButton');\
+            const message = input.value.trim();\
+            \
+            if (!message || isTyping) return;\
+            \
+            // Add user message\
+            addMessage(message, true);\
+            input.value = '';\
+            \
+            // Disable input and show typing\
+            isTyping = true;\
+            sendButton.disabled = true;\
+            showTypingIndicator();\
+            \
+            // Simulate thinking time\
+            await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));\
+            \
+            // Remove typing indicator and add response\
+            removeTypingIndicator();\
+            const response = generateResponse(message);\
+            addMessage(response.content, false, response.hasSource, response.sourceUrl);\
+            \
+            // Re-enable input\
+            isTyping = false;\
+            sendButton.disabled = false;\
+            input.focus();\
+        \}\
+\
+        function askQuestion(question) \{\
+            document.getElementById('messageInput').value = question;\
+            sendMessage();\
+        \}\
+\
+        function handleKeyPress(event) \{\
+            if (event.key === 'Enter' && !event.shiftKey) \{\
+                event.preventDefault();\
+                sendMessage();\
+            \}\
+        \}\
+\
+        // Auto-resize textarea\
+        document.getElementById('messageInput').addEventListener('input', function() \{\
+            this.style.height = 'auto';\
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';\
+        \});\
+\
+        // Focus input on load\
+        window.addEventListener('load', () => \{\
+            document.getElementById('messageInput').focus();\
+        \});\
+    </script>\
+</body>\
+</html>}
